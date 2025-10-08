@@ -25,28 +25,26 @@ void data_task(void *p) {
 
 void process_task(void *p) {
     int data = 0;
-    
-    int buf[5] = {0};
-    int head = 0;
-    int32_t sum = 0;
-    int samples = 0;
 
+    int buffer[5] = {0, 0, 0, 0, 0};
+    int buffer_index = 0;
+    int sample_count = 0;
+    
     while (true) {
         if (xQueueReceive(xQueueData, &data, 100)) {
-            if (samples >= 5) {
-                sum -= buf[head];
-            } else {
-                samples++;
+            buffer[buffer_index] = data;
+            buffer_index = (buffer_index + 1) % 5;
+            sample_count++;
+            
+            if (sample_count >= 5) {
+                int sum = 0;
+                for (int i = 0; i < 5; i++) {
+                    sum += buffer[i];
+                }
+                int filtered_value = sum / 5;
+                
+                printf("%d\n", filtered_value);
             }
-
-            buf[head] = data;
-            sum += data;
-
-            if (samples >= 5) {
-                printf("%d\n", (int)(sum / 5));
-            }
-
-            head = (head + 1) % 5;
 
             vTaskDelay(pdMS_TO_TICKS(50));
         }
