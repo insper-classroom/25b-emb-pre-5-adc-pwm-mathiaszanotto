@@ -41,8 +41,10 @@ void process_task(void *p) {
                 buf[head] = data;
                 head = (head + 1) % 5;
                 count++;
-                int y = (int)(acc / count);
-                printf("%d\n", y);
+                if (count == 5) {
+                    int y = (int)(acc / 5);
+                    printf("%d\n", y);
+                }
             } else {
                 acc -= buf[head];
                 buf[head] = data;
