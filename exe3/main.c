@@ -31,6 +31,8 @@ void process_task(void *p) {
     int count = 0;
     int32_t acc = 0;
 
+    //apu
+
     while (true) {
         if (xQueueReceive(xQueueData, &data, 100)) {
             // implementar filtro aqui!
