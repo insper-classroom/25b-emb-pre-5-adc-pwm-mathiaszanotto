@@ -28,30 +28,26 @@ void process_task(void *p) {
 
     int buf[5] = {0};
     int head = 0;
-    int filled = 0;
+    int count = 0;
     int32_t acc = 0;
-    int printed = 0;
 
     while (true) {
         if (xQueueReceive(xQueueData, &data, 100)) {
             // implementar filtro aqui!
-            if (filled < 5) {
+            if (count < 5) {
                 acc += data;
                 buf[head] = data;
                 head = (head + 1) % 5;
-                filled++;
-                if (filled == 5) {
-                    int y = (int)(acc / 5);
-                    if (printed < 7) { printf("%d \n", y); printed++; }
-                }
+                count++;
+                int y = (int)(acc / count);
+                printf("%d\n", y);
             } else {
                 acc -= buf[head];
                 buf[head] = data;
                 acc += data;
                 head = (head + 1) % 5;
-
                 int y = (int)(acc / 5);
-                if (printed < 7) { printf("%d \n", y); printed++; }
+                printf("%d\n", y);
             }
             // deixar esse delay!
             vTaskDelay(pdMS_TO_TICKS(50));
