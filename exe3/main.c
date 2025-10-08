@@ -36,23 +36,21 @@ void process_task(void *p) {
     while (true) {
         if (xQueueReceive(xQueueData, &data, 100)) {
             // implementar filtro aqui!
-            if (count < 5) {
-                acc += data;
-                buf[head] = data;
-                head = (head + 1) % 5;
-                count++;
-                if (count == 5) {
-                    int y = (int)(acc / 5);
-                    printf("%d\n", y);
-                }
-            } else {
+            if (count == 5) {
                 acc -= buf[head];
-                buf[head] = data;
-                acc += data;
-                head = (head + 1) % 5;
+            } else {
+                count++;
+            }
+            
+            acc += data;
+            buf[head] = data;
+            
+            if (count == 5) {
                 int y = (int)(acc / 5);
                 printf("%d\n", y);
             }
+
+            head = (head + 1) % 5;
             // deixar esse delay!
             vTaskDelay(pdMS_TO_TICKS(50));
         }
